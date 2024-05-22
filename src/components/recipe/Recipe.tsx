@@ -17,7 +17,9 @@ export default function Recipe() {
       </div>
       <div className="flex mt-5 gap-3">
         {recipes.map((data, index) => (
-          <RecipeCard index={index} />
+          <Link key={data.id} to={`/recipe/recipedetail/${index}`}>
+            <RecipeCard index={index} />
+          </Link>
         ))}
       </div>
     </div>

@@ -598,19 +598,23 @@ export default function RecipesPage() {
           )}
         </div>
 
-        <div className="w-[1300px] flex flex-wrap justify-between mt-8">
+        <div className="w-[1300px] flex flex-wrap mt-8">
           {allPage &&
             onePage &&
-            recipes.slice(0, 10).map((data) => (
+            recipes.slice(0, 10).map((data, index) => (
               <div
                 key={data.id}
-                onClick={() => navigate("/recipe/recipeDetail")}
-                className=" cursor-pointer"
+                onClick={() => navigate(`/recipe/recipeDetail/${index}`)}
+                className=" cursor-pointer mr-8"
               >
                 <div className="flex justify-center items-center w-[230px] h-[306px] border-2 border-sky-500 rounded-lg relative top-[44px] z-0">
                   <LikeButton></LikeButton>
                   {data.imageUrl ? (
-                    <img src={data.imageUrl} alt="" />
+                    <img
+                      src={data.imageUrl}
+                      alt=""
+                      className="w-[230px] h-[200px]"
+                    />
                   ) : (
                     <img src={testpicture} alt="" />
                   )}

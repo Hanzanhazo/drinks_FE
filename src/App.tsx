@@ -26,7 +26,6 @@ import AlcoholsExplantion from "./pages/AlcoholsExplantion/AlcoholsExplantion";
 
 import CommunitySetting from "./pages/CommunitySetting/CommunitySetting";
 
-
 const LayOut = () => {
   return (
     <div>
@@ -65,7 +64,10 @@ function App() {
         <Route path="/communityMember" element={<CommunityMember />}></Route>
         <Route path="/recipe/createrecipe" element={<CreateRecipe />}></Route>
         <Route path="/recipe/editrecipe" element={<EditRecipe />}></Route>
-        <Route path="/recipe/RecipeDetail" element={<RecipeDetail />}></Route>
+        <Route
+          path="/recipe/RecipeDetail/:index"
+          element={<RecipeDetail />}
+        ></Route>
         <Route path="/recipe/test" element={<AlcoholicCategory />}></Route>
       </Route>
       <Route path="/login/signup" element={<SignUp></SignUp>}></Route>

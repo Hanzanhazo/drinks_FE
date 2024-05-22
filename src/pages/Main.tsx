@@ -15,12 +15,12 @@ export default function Main() {
   const { modalControl } = modalStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(loginUser);
-    if(loginUser === undefined || Object.values(loginUser).every(value => value === '')) navigate('/logintest');
-    fetchCommunity();
-    modalControl('closeAll');
-  },[loginUser])
+  // useEffect(() => {
+  //   console.log(loginUser);
+  //   if(loginUser === undefined || Object.values(loginUser).every(value => value === '')) navigate('/logintest');
+  //   fetchCommunity();
+  //   modalControl('closeAll');
+  // },[loginUser])
 
   return (
     <div className="App">
@@ -34,7 +34,12 @@ export default function Main() {
           {/* 레시피 */}
           <Recipe />
           {/* 새싹모임 */}
+<<<<<<< HEAD
           <NewCommunity/>
+=======
+
+          <NewCommunity />
+>>>>>>> a927ed9e5bf6f9dd79ec701d55c2a21c68b5988d
           {/* 공지사항 */}
           <Announcement />
         </div>

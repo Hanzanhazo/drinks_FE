@@ -60,7 +60,9 @@ export default function Header() {
           <img src={mask} alt="scrap" className="mr-[10px]" />
         </Link>
         <img src={scrap} alt="scrap" className="mr-[10px]" />
-        <img src={info} alt="info" onClick={logOutTest} />
+        <Link to="/login">
+          <img src={info} alt="info" onClick={logOutTest} />
+        </Link>
       </div>
     </header>
   );

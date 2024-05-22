@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { CameraOutlined } from "@ant-design/icons";
 import { createRecipe } from "../../Api/axios";
 import alcoholicTest from "../../img/alcoholicTest.webp";
@@ -83,8 +83,10 @@ export default function RecipeDetail() {
   console.log(comment);
   console.log(newComment);
 
+  const { index } = useParams<{ index: string }>();
   const recipes = useAppSelector((state) => state.Recipe);
-  console.log(recipes);
+  const recipe = recipes[parseInt(index || "0")];
+  console.log(recipe);
   // useEffect(() => {
   //   const UserRecipeData = async () => {
   //     const data = await UserRecipeList(); // 레시피 데이터 가져오기
@@ -120,31 +122,32 @@ export default function RecipeDetail() {
     });
     setFoodStep(updatedSteps);
   };
-  // 데이터를 서버에 전송하는 함수
-  const handleSubmit = async () => {
-    const response = await createRecipe(
-      imageUrl,
-      createRecipeName,
-      createRecipeIntroduce,
-      sojuType,
-      beerType,
-      wineType,
-      sakeType,
-      vodkaType,
-      whiskeyType,
-      makgeolliType,
-      foodIngredient,
-      foodStep
-    );
 
-    if (response) {
-      console.log("Recipe created successfully:", response);
-      // 성공 처리, 예를 들어 알림 표시나 페이지 이동 등
-    } else {
-      console.error("Failed to create recipe");
-      // 실패 처리, 예를 들어 에러 메시지 표시 등
-    }
-  };
+  // 데이터를 서버에 전송하는 함수
+  // const handleSubmit = async () => {
+  //   const response = await createRecipe(
+  //     imageUrl,
+  //     createRecipeName,
+  //     createRecipeIntroduce,
+  //     sojuType,
+  //     beerType,
+  //     wineType,
+  //     sakeType,
+  //     vodkaType,
+  //     whiskeyType,
+  //     makgeolliType,
+  //     foodIngredient,
+  //     foodStep
+  //   );
+
+  //   if (response) {
+  //     console.log("Recipe created successfully:", response);
+  //     // 성공 처리, 예를 들어 알림 표시나 페이지 이동 등
+  //   } else {
+  //     console.error("Failed to create recipe");
+  //     // 실패 처리, 예를 들어 에러 메시지 표시 등
+  //   }
+  // };
 
   const onChangeComment = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
@@ -169,10 +172,10 @@ export default function RecipeDetail() {
       <section className="ml-[404px] mt-[200px]">
         <div className="text-4xl mb-16 text-[#FFB739]"></div>
         <form className="flex">
-          {recipes[0].imageUrl ? (
+          {recipe.imageUrl ? (
             <div className="w-[320px] h-[232px] border-2 border-sky-500 bg-sky-200 rounded-2xl flex flex-col justify-center items-center ml-[97px] mr-[34px] overflow-hidden">
               <img
-                src={recipes[0].imageUrl}
+                src={recipe.imageUrl}
                 alt="Uploaded Image"
                 className="size-full"
               />
@@ -193,13 +196,13 @@ export default function RecipeDetail() {
                 <div className="text-2xl">종 류</div>
               </div>
               <ul className="flex flex-row w-[546px] flex-wrap text-xl">
-                {recipes[0].types.soju && <li className="mr-4">소 주</li>}
-                {recipes[0].types.beer && <li className="mr-4">맥 주</li>}
-                {recipes[0].types.wine && <li className="mr-4">와 인</li>}
-                {recipes[0].types.sake && <li className="mr-4">사 케</li>}
-                {recipes[0].types.vodka && <li className="mr-4">보드카</li>}
-                {recipes[0].types.whiskey && <li className="mr-4">위스키</li>}
-                {recipes[0].types.makgeolli && <li className="mr-4">막걸리</li>}
+                {recipe.types.soju && <li className="mr-4">소 주</li>}
+                {recipe.types.beer && <li className="mr-4">맥 주</li>}
+                {recipe.types.wine && <li className="mr-4">와 인</li>}
+                {recipe.types.sake && <li className="mr-4">사 케</li>}
+                {recipe.types.vodka && <li className="mr-4">보드카</li>}
+                {recipe.types.whiskey && <li className="mr-4">위스키</li>}
+                {recipe.types.makgeolli && <li className="mr-4">막걸리</li>}
               </ul>
             </div>
             <div className="flex flex-row mt-6">
@@ -208,7 +211,7 @@ export default function RecipeDetail() {
                 <textarea
                   placeholder="이 레시피 탄생 배경을 적어주세요"
                   className="w-full h-full text-2xl rounded-2xl placeholder-white resize-none"
-                  value={recipes[0].introduce}
+                  value={recipe.introduce}
                 />
               </div>
             </div>
@@ -220,7 +223,7 @@ export default function RecipeDetail() {
           <div className="text-3xl text-[#FFB739] mt-3">재료</div>
         </form>
         <form className="w-[1050px] flex flex-row flex-wrap justify-between">
-          {recipes[0].ingredients.map((data, index) => (
+          {recipe.ingredients.map((data, index) => (
             <form
               className={`${
                 data.id % 2 !== 0 ? "mr-5" : ""
@@ -228,10 +231,10 @@ export default function RecipeDetail() {
             >
               <div className="w-[500px] flex justify-between">
                 <div className=" bg-[#003A66]  text-xl text-white">
-                  {recipes[0].ingredients[index].material}
+                  {recipe.ingredients[index].material}
                 </div>
                 <div className=" bg-[#003A66]  text-xl text-white">
-                  {recipes[0].ingredients[index].quantity}
+                  {recipe.ingredients[index].quantity}
                 </div>
               </div>
             </form>
@@ -242,12 +245,12 @@ export default function RecipeDetail() {
         <form className="w-[1115px] flex justify-between mb-16">
           <div className="text-4xl text-[#FFB739]">제조 순서</div>
         </form>
-        {recipes[0].steps.map((data, index) => (
+        {recipe.steps.map((data, index) => (
           <form key={data.id} className={`${data.id > 1 ? "mt-8" : ""} flex`}>
             <div className="w-[320px] h-[232px] border-2 border-sky-500 bg-sky-200 rounded-2xl flex flex-col justify-center items-center ml-[97px] mr-[34px] overflow-hidden">
               {data.imageUrl ? (
                 <img
-                  src={recipes[0].steps[index].imageUrl}
+                  src={recipe.steps[index].imageUrl}
                   alt={`Uploaded for step ${data.id}`}
                   className="size-full"
                 />
@@ -264,7 +267,7 @@ export default function RecipeDetail() {
 
               <textarea
                 className="w-[488px] h-[190px] text-2xl flex items-start resize-none"
-                value={recipes[0].steps[index].description}
+                value={recipe.steps[index].description}
                 onChange={(e) => onChangeStepValue(index, e)}
               />
             </div>
