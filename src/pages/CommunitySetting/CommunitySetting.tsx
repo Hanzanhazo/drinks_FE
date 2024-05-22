@@ -45,8 +45,6 @@ export default function CommunitySetting() {
   //       setCommunityThumbnail(imageUrl);
   //       return;  
   //     }
-      
-  //     URL.revokeObjectURL(imageUrl)
   //   }
   // };
 

@@ -54,7 +54,7 @@ export default function Writing({modals, modalControl}: ModalStoreType) {
     console.log(values);
 
     const post = () => {
-        const [updateCommunity] = community.map((u) => {
+        const updateCommunity = community.map((u) => {
             if(u.id === selectedCommunity.id){
                 return {
                     ...u,
@@ -70,7 +70,8 @@ export default function Writing({modals, modalControl}: ModalStoreType) {
             }
             return u;
         }) as CommunityType[]
-        joinCommunity(updateCommunity).then(() => fetchCommunity());
+        const [filter] = updateCommunity.filter((community) => community.id === selectedCommunity.id);
+        joinCommunity(filter).then(() => fetchCommunity());
         modalControl('writing');
     }
 
@@ -78,7 +79,7 @@ export default function Writing({modals, modalControl}: ModalStoreType) {
     <div className="w-screen h-screen inset-0 bg-black/60 z-50 fixed top-0 flex justify-center items-center">
             <div className="flex flex-col justify-center items-center w-[800px] h-[600px] border-2 rounded-[10px] bg-white">
                 <div className="flex items-center justify-center">
-                    <span className="text-[32px]">글쓰기</span>
+                    <span className="text-[32px] mb-10">글쓰기</span>
                 </div>
                 <ReactQuill
                 className="w-[700px] h-[300px]"

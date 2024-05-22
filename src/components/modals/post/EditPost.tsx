@@ -77,7 +77,7 @@ export default function EditPost({modals, modalControl}: ModalStoreType) {
     <div className="w-screen h-screen inset-0 bg-black/60 z-50 fixed top-0 flex justify-center items-center">
             <div className="flex flex-col justify-center items-center w-[800px] h-[600px] border-2 rounded-[10px] bg-white">
                 <div className="flex items-center justify-center">
-                    <span className="text-[32px]">글 수정</span>
+                    <span className="text-[32px] mb-10">글 수정</span>
                 </div>
                 <ReactQuill
                 className="w-[700px] h-[300px]"

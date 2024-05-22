@@ -34,7 +34,6 @@ export default function Main() {
           {/* 레시피 */}
           <Recipe />
           {/* 새싹모임 */}
-
           <NewCommunity/>
           {/* 공지사항 */}
           <Announcement />

@@ -4,18 +4,19 @@ import { ModalStoreType } from "../../../../stores/modal";
 import communityStore from "../../../../stores/community";
 import { CommunityType, MemberType, UserType } from "../../../../models/type";
 import axios from "axios";
-import { createRoom } from "../../../../Api/chat";
+import { createRoom, joinRoomByName } from "../../../../Api/chat";
 import { joinCommunity } from "../../../../Api/community";
 import userStore from "../../../../stores/user";
 import InitialMembersCard from "../../../community/chatroom/initialMembersCard/InitialMembersCard";
 
 export default function CreateRoom({modals, modalControl}: ModalStoreType) {
+  const { loginUser } = userStore();
   const [myImage, setMyImage] = useState<string>("");
   const [roomName, setRoomName] = useState<string>("");
-  const [user, setUser] = useState<string[]>([]);
-  const { selectedCommunity, community, fetchCommunity } = communityStore();
+  const [user, setUser] = useState<string[]>([loginUser.name]);
+  const { selectedCommunity, community, fetchCommunity, selectChatRoom } = communityStore();
   const [inviteMembers, setInviteMembers] = useState<UserType[]>([]);
-  const { loginUser } = userStore();
+  
 
   const onChangeImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -37,7 +38,7 @@ export default function CreateRoom({modals, modalControl}: ModalStoreType) {
     const realMember = selectedCommunity.member.filter(m => m.state === true);
     setInviteMembers(realMember);
   }
-  console.log(user);
+  
   const create = async () => {
     const memberNicknames = user;
     const room = await createRoom(roomName, myImage, memberNicknames);
@@ -56,8 +57,24 @@ export default function CreateRoom({modals, modalControl}: ModalStoreType) {
       }
       return u;
   }) as CommunityType[]
+
   joinCommunity(updateCommunity).then(() => fetchCommunity());
-  modalControl('create')
+  const joinRoom = await joinRoomByName(roomName, loginUser.name);
+  if(joinRoom){
+    const newRoom = {
+      id: joinRoom.roomId,
+      roomName: joinRoom.name,
+      thumbnailUrl: joinRoom.thumbnailUrl,
+      initialMembers: joinRoom.userIds,
+    };
+    selectChatRoom(newRoom);
+    modalControl('create');
+    modalControl('chat');
+    modalControl('joinRoom');
+  }else{
+    console.log("데이터 없음");
+  }
+
      // const payload = {
     //     name: roomName,
     //     thumbnailUrl: myImage,

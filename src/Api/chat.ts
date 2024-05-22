@@ -16,3 +16,17 @@ export const createRoom = async (
         console.log(err);
     }
 }
+export const joinRoomByName = async (
+   roomName: any,
+   userId: any,
+) => {
+    try{
+        const rqs = await axios.post("https://k102d93527f43a.user-app.krampoline.com/chat/joinRoomByName", {
+            roomName,
+            userId,
+        });
+        return rqs.data;
+    }catch(err){
+        console.log(err);
+    }
+}

@@ -1,12 +1,23 @@
 import exit from "../../../../img/exit.png";
 import chatmember from "../../../../img/chatmember.png";
-import send from "../../../../img/send.png";
+import sendIcon from "../../../../img/send.png";
 import RoomMember from "../room_member/RoomMember";
 import { ModalStoreType } from "../../../../stores/modal";
 import communityStore from "../../../../stores/community";
+import SockJS from "sockjs-client"
+import Stomp from "stompjs"
+import { useEffect, useState } from "react";
+import Login from "../../../../pages/Login/Login";
+import userStore from "../../../../stores/user";
 
 export default function JoinRoom({modals, modalControl}: ModalStoreType) {
+  const { loginUser } = userStore();
   const { selectedChatRoom } = communityStore();
+  const [stompClient, setStompClient] = useState<Stomp.Client | undefined>();
+  const [sendMessage, setSendMessage] = useState<any>('');
+  const [messages, setMessages] = useState<any>();
+  const [sender, setSender] = useState();
+
   const exitRoom = () => {
     modalControl('joinRoom');
     modalControl('chat');
@@ -15,6 +26,39 @@ export default function JoinRoom({modals, modalControl}: ModalStoreType) {
   const roomMemberModal = () => {
     modalControl('roomMember');
   }
+
+  const sendBtn = () => {
+    const chatMessage = {
+        type: 'TALK',
+        roomId: selectedChatRoom.id,
+        sender: loginUser.name,
+        message: sendMessage,
+    }
+
+    stompClient?.send(`https://k102d93527f43a.user-app.krampoline.com/app/chat.sendMessage/${selectedChatRoom.id}`, {}, JSON.stringify(chatMessage))
+    setSendMessage('');
+  }
+
+  const connect_socket = (roomId: string) => {
+    const socket = new SockJS("https://k102d93527f43a.user-app.krampoline.com/ws");
+    const client = Stomp.over(socket);
+
+    client.connect({}, (frame) => {
+        console.log("소켓 연결",frame);
+        client.subscribe(`https://k102d93527f43a.user-app.krampoline.com/topic/${roomId}`, (message) => {
+            const newMessage = JSON.parse(message.body);
+            //console.log(newMessage);
+            // setMessages((prev:any) =>[...prev, newMessage]);
+            // setSender(JSON.parse(message.body).sender);
+        })
+    })
+
+    setStompClient(client);
+  }
+  useEffect(()=> {
+    connect_socket(selectedChatRoom.id);
+  },[])
+
   return (
     <div className="border border-black rounded-[10px] w-[490px] h-[685px] absolute top-[-690px] right-[-25px] bg-blue-500">
         {modals.roomMember && <RoomMember modals={modals} modalControl={modalControl}/>}
@@ -58,8 +102,11 @@ export default function JoinRoom({modals, modalControl}: ModalStoreType) {
         </div>
         <div className="flex justify-center">
             <div className="flex">
-                <input type="text" className="w-[330px] h-[40px] rounded-[10px] px-5" placeholder="메세지를 입력해주세요"/>
-                <img src={send} alt="send" className="ml-3"/>
+                <input type="text"
+                value={sendMessage}
+                onChange={(e)=>setSendMessage(e.target.value)}
+                className="w-[330px] h-[40px] rounded-[10px] px-5" placeholder="메세지를 입력해주세요"/>
+                <img src={sendIcon} alt="send" className="ml-3" onClick={sendBtn}/>
             </div>
         </div>
      </div>

@@ -20,7 +20,7 @@ export default function ClickCommunity() {
     //const navigate = useNavigate();
   
   useEffect(() => {
-    const [filterItem]  = community.filter(f => f.id === params.id);
+    const [filterItem]  = community.filter(f => f.id === selectedCommunity.id);
     selectCommunity(filterItem);
   },[community])
     

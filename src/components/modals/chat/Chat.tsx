@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import addChatRoom from "../../../img/addChatRoom.png";
-import SockJS from "sockjs-client"
-import Stomp from "stompjs"
 import ChatRoom from "../../community/chatroom/ChatRoom";
-import { ChatRoomType } from "../../../models/type";
 import { ModalStoreType } from "../../../stores/modal";
 import communityStore from "../../../stores/community";
+import { ChatRoomType } from "../../../models/type";
 
 
 export default function Chat({modalControl}: ModalStoreType) {
@@ -14,24 +12,13 @@ export default function Chat({modalControl}: ModalStoreType) {
   
   
   const getChatRoom = () => {
-    const [room] = community.map((c) => {
-      if(c.id === selectedCommunity.id){
-        return c.chatRoom;
-      }
-    })
-    setChatRoom(room);
-  }
-  
-  const connect_socket = () => {
-    const socket = new SockJS("https://cb42-120-142-108-113.ngrok-free.app/ws");
-    const client = Stomp.over(socket)
-    client.connect({}, () => {
-        console.log("소켓 연결");
-    })
+    const room = community.find((c) => c.id === selectedCommunity.id);
+    if (room) {
+      setChatRoom(room.chatRoom);
+    }
   }
 
   useEffect(()=> {
-    //connect_socket();
     getChatRoom();
   },[community])
 
